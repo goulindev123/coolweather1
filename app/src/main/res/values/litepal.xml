@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <litepal>
+        <dbname value="cool_weather"/>
+        <version value="1"/>
+
+        <list>
+            <mapping class= "com.example.hzk.myapplication.db.Province"/>
+            <mapping class = "com.example.hzk.myapplication.db.City"/>
+            <mapping class= "com.example.hzk.myapplication.db.Country"/>
+        </list>
+    </litepal>
+
+</resources>
