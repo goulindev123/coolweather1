@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import com.example.a.coolweather.db.City;
 import com.example.a.coolweather.db.County;
 import com.example.a.coolweather.db.Province;
+import com.example.a.coolweather.gson.Weather;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,7 +56,8 @@ public class Utility {
 
         }
         return false;
-    }public static boolean handCountyRespone(String response, int cityId) {
+    }
+    public static boolean handCountyRespone(String response, int cityId) {
         if (!TextUtils.isEmpty(response)) {
             try {
                 JSONArray allCounties = new JSONArray(response);
@@ -74,6 +77,17 @@ public class Utility {
 
         }
         return false;
+    }
+    public static Weather handleWeatherResponse(String reponse){
+        try {
+            JSONObject jsonObject = new JSONObject(reponse);
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
+            String weathercontent = jsonArray.getJSONObject(0).toString();
+            return  new Gson().fromJson(weathercontent,Weather.class);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

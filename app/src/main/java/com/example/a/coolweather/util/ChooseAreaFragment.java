@@ -3,6 +3,7 @@ package com.example.a.coolweather.util;
 import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.a.coolweather.MainActivity;
 import com.example.a.coolweather.R;
+import com.example.a.coolweather.WeatherActivity;
 import com.example.a.coolweather.db.City;
 import com.example.a.coolweather.db.County;
 import com.example.a.coolweather.db.Province;
@@ -73,6 +76,7 @@ public class ChooseAreaFragment extends Fragment {
 
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.choose_area, container, false);
@@ -83,8 +87,6 @@ public class ChooseAreaFragment extends Fragment {
         listView.setAdapter(adapter);
         return view;
     }
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -96,8 +98,23 @@ public class ChooseAreaFragment extends Fragment {
                 } else if (currentlevel == LEVEL_CITY) {
                     selectCity = cityList.get(position);
                     queryCounties();
+                }else if (currentlevel == LEVEL_COUNTRY) {
+                    String weatherId = countryList.get(position).getWeatherId();
+                    if(getActivity() instanceof MainActivity){
+                    Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                    intent.putExtra("weather_id", weatherId);
+                    startActivity(intent);
+                    getActivity().finish();}
+                    else if (getActivity() instanceof WeatherActivity){
+                        WeatherActivity weatherActivity=(WeatherActivity) getActivity();
+                        weatherActivity.drawerLayout.closeDrawers();
+                        weatherActivity.SwipeRefresh.setRefreshing(true);
+                        weatherActivity.requestWeather(weatherId);
+                    }
+
+                    }
                 }
-            }
+
         });
         back_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +128,10 @@ public class ChooseAreaFragment extends Fragment {
         });
         queryProvinces();
     }
+
+
+
+
 
     /**
      * 查询所有省，优先从数据库中查询，若是没有再到服务器上查询
@@ -245,6 +266,8 @@ public class ChooseAreaFragment extends Fragment {
         }
         progressDialog.show();
     }
+
+
 }
 
 
